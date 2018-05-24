@@ -1,6 +1,5 @@
 library('dplyr')
 files <- list.files('data')
-files <- c('1987.csv')
 results <- sapply(files, function(x)
 {
   data <- read.csv(file.path('data', x))
@@ -16,7 +15,7 @@ results <- sapply(files, function(x)
   year <- tools::file_path_sans_ext(x)
   len_all <- nrow(data)
   arr_delay <- mean(data$ArrDelay, na.rm = TRUE)
-  dep_delay <- mean(data$DepDelay,, na.rm = TRUE)
+  dep_delay <- mean(data$DepDelay, na.rm = TRUE)
   lens <- sapply(subsets, nrow)
   by_carrier <- data %>% group_by(UniqueCarrier) %>% 
     summarise(dep=mean(DepDelay, na.rm = TRUE), arr =mean(ArrDelay, na.rm = TRUE), count = n())
