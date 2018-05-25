@@ -1,0 +1,59 @@
+PD-R-Py Praca Domowa nr 4
+========================================================
+author: Kamil Grabowski, Piotr Luboń
+date: 
+autosize: true
+```{R, echo=FALSE}
+source('plot_helpers.R')
+data <- readRDS('agg_data1.Rds')
+options(scipen=10)
+```
+Liczba lotów na przestrzeni lat
+========================================================
+```{R}
+yearly_data <- loty_w_latach(data)
+plot(yearly_data$rok, yearly_data$liczba_lotow, xlab='Rok', ylab='Liczba Lotów')
+```
+
+
+Opóznienia na przestrzeni lat
+========================================================
+```{R}
+plot(yearly_data$rok, yearly_data$dep_delay, xlab='Rok', ylab='Srednie opoznienie', col='skyblue', type = 'l',
+     ylim=c(min(yearly_data$arr_delay), max(yearly_data$dep_delay)))
+lines(yearly_data$rok, yearly_data$arr_delay, col='orangered')
+```
+
+Który przewoźnik najmniej się spóźnia?
+========================================================
+
+```{r, echo=FALSE}
+carrier_data <- delay_by_carrier(data)
+carrier_data_long <- carrier_data[lapply(carrier_data, nrow)>15]
+par(mfrow=c(3,3))
+ylim_min <- min(unlist(lapply(carrier_data_long, function(x){return(min(x$dep))})))
+ylim_max <- max(unlist(lapply(carrier_data_long, function(x){return(max(x$dep))})))
+lapply(carrier_data_long, function(x, arg1, arg2)
+  {
+    plot(x$year, x$dep, type = 'b', xlab='Rok', ylab ='Srednie opoznienie wylotu', main=x[1,'UniqueCarrier'],ylim=c(arg1, arg2))
+  }, arg1=ylim_min, arg2=ylim_max)
+```
+========================================================
+
+```{r, echo=FALSE}
+carrier_data <- delay_by_carrier(data)
+carrier_data_long <- carrier_data[lapply(carrier_data, nrow)>15]
+par(mfrow=c(3,3))
+ylim_min <- min(unlist(lapply(carrier_data_long, function(x){return(min(x$arr))})))
+ylim_max <- max(unlist(lapply(carrier_data_long, function(x){return(max(x$arr))})))
+lapply(carrier_data_long, function(x, arg1, arg2)
+  {
+    plot(x$year, x$arr, type = 'b', xlab='Rok', ylab ='Srednie opoznienie przylotu', main=x[1,'UniqueCarrier'],ylim=c(arg1, arg2))
+  }, arg1=ylim_min, arg2=ylim_max)
+```
+
+========================================================
+
+```{r, echo=FALSE}
+
+```
