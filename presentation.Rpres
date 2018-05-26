@@ -4,13 +4,17 @@ author: Kamil Grabowski, Piotr Luboń
 date: 
 autosize: true
 ```{R, echo=FALSE}
+library("kableExtra")
+library('magrittr')
 source('plot_helpers.R')
 data <- readRDS('agg_data2.Rds')
 options(scipen=10)
+knitr::opts_chunk$set(fig.align='center')
+knitr::opts_chunk$set(fig.width=18, fig.height=9) 
 ```
 Liczba lotów na przestrzeni lat
 ========================================================
-```{R, echo=FALSE}
+```{R, echo=FALSE, fig.align='center'}
 yearly_data <- loty_w_latach(data)
 plot(yearly_data$rok, yearly_data$liczba_lotow, xlab='Rok', ylab='Liczba Lotów')
 ```
@@ -58,17 +62,17 @@ Piątek trzynastego
 ```{r, echo=FALSE}
 unlucky <- avg_delay_unlucky(data)
 test_results <- get_test_results(data, unlucky)
-kableExtra::kable(rbind(unlucky[1:2], test_results[1,]))
+kableExtra::kable(rbind(unlucky[1:2], test_results[1,]), booktabs = TRUE) %>% kable_styling(latex_options = "striped")
 ```
 Wtorek trzynastego
 ========================================================
 
 ```{r, echo=FALSE}
-kableExtra::kable(rbind(unlucky[3:4], test_results[2,]))
+kableExtra::kable(rbind(unlucky[3:4], test_results[2,]), booktabs = TRUE) %>% kable_styling(latex_options = "striped")
 ```
 Piątek siedemnastego
 ========================================================
 
 ```{r, echo=FALSE}
-kableExtra::kable(rbind(unlucky[5:6], test_results[3,]))
+kableExtra::kable(rbind(unlucky[5:6], test_results[3,]), booktabs = TRUE) %>% kable_styling(latex_options = "striped")
 ```
