@@ -5,12 +5,12 @@ date:
 autosize: true
 ```{R, echo=FALSE}
 source('plot_helpers.R')
-data <- readRDS('agg_data1.Rds')
+data <- readRDS('agg_data2.Rds')
 options(scipen=10)
 ```
 Liczba lotów na przestrzeni lat
 ========================================================
-```{R}
+```{R, echo=FALSE}
 yearly_data <- loty_w_latach(data)
 plot(yearly_data$rok, yearly_data$liczba_lotow, xlab='Rok', ylab='Liczba Lotów')
 ```
@@ -18,7 +18,7 @@ plot(yearly_data$rok, yearly_data$liczba_lotow, xlab='Rok', ylab='Liczba Lotów'
 
 Opóznienia na przestrzeni lat
 ========================================================
-```{R}
+```{R, echo=FALSE}
 plot(yearly_data$rok, yearly_data$dep_delay, xlab='Rok', ylab='Srednie opoznienie', col='skyblue', type = 'l',
      ylim=c(min(yearly_data$arr_delay), max(yearly_data$dep_delay)))
 lines(yearly_data$rok, yearly_data$arr_delay, col='orangered')
@@ -27,7 +27,7 @@ lines(yearly_data$rok, yearly_data$arr_delay, col='orangered')
 Który przewoźnik najmniej się spóźnia?
 ========================================================
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,results='hide',fig.keep='all'}
 carrier_data <- delay_by_carrier(data)
 carrier_data_long <- carrier_data[lapply(carrier_data, nrow)>15]
 par(mfrow=c(3,3))
@@ -38,9 +38,10 @@ lapply(carrier_data_long, function(x, arg1, arg2)
     plot(x$year, x$dep, type = 'b', xlab='Rok', ylab ='Srednie opoznienie wylotu', main=x[1,'UniqueCarrier'],ylim=c(arg1, arg2))
   }, arg1=ylim_min, arg2=ylim_max)
 ```
+Który przewoźnik najmniej się spóźnia?
 ========================================================
 
-```{r, echo=FALSE}
+```{r,echo=FALSE,results='hide',fig.keep='all'}
 carrier_data <- delay_by_carrier(data)
 carrier_data_long <- carrier_data[lapply(carrier_data, nrow)>15]
 par(mfrow=c(3,3))
@@ -51,9 +52,23 @@ lapply(carrier_data_long, function(x, arg1, arg2)
     plot(x$year, x$arr, type = 'b', xlab='Rok', ylab ='Srednie opoznienie przylotu', main=x[1,'UniqueCarrier'],ylim=c(arg1, arg2))
   }, arg1=ylim_min, arg2=ylim_max)
 ```
-
+Piątek trzynastego
 ========================================================
 
 ```{r, echo=FALSE}
+unlucky <- avg_delay_unlucky(data)
+test_results <- get_test_results(data, unlucky)
+kableExtra::kable(rbind(unlucky[1:2], test_results[1,]))
+```
+Wtorek trzynastego
+========================================================
 
+```{r, echo=FALSE}
+kableExtra::kable(rbind(unlucky[3:4], test_results[2,]))
+```
+Piątek siedemnastego
+========================================================
+
+```{r, echo=FALSE}
+kableExtra::kable(rbind(unlucky[5:6], test_results[3,]))
 ```
