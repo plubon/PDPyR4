@@ -115,16 +115,16 @@ lapply(carrier_data_long, function(x, arg1, arg2)
 ```{r, echo=FALSE}
 unlucky <- avg_delay_unlucky(data)
 test_results <- get_test_results(data, unlucky)
-kableExtra::kable(rbind(unlucky[1:2], test_results[1,]))
+kableExtra::kable(rbind(unlucky[1:2], test_results[1,])) %>% kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 ## Wtorek trzynastego
 ```{r, echo=FALSE}
-kableExtra::kable(rbind(unlucky[3:4], test_results[2,]))
+kableExtra::kable(rbind(unlucky[3:4], test_results[2,])) %>% kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
 ## Piątek siedemnastego
 ```{r, echo=FALSE}
-kableExtra::kable(rbind(unlucky[5:6], test_results[3,]))
+kableExtra::kable(rbind(unlucky[5:6], test_results[3,]), ) %>% kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
 ```
 
