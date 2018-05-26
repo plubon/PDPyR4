@@ -9,8 +9,23 @@ runtime: shiny
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 source('plot_helpers.R')
+source('routes_helper.R')
 data <- readRDS('agg_data2.Rds')
 options(scipen=10)
+```
+
+## Liczba lotów na przestrzeni lat
+```{R, echo=FALSE}
+yearly_data <- loty_w_latach(data)
+plot(yearly_data$rok, yearly_data$liczba_lotow, xlab='Rok', ylab='Liczba Lotów')
+```
+
+
+## Opóznienia na przestrzeni lat
+```{R, echo=FALSE}
+plot(yearly_data$rok, yearly_data$dep_delay, xlab='Rok', ylab='Srednie opoznienie', col='skyblue', type = 'l',
+     ylim=c(min(yearly_data$arr_delay), max(yearly_data$dep_delay)))
+lines(yearly_data$rok, yearly_data$arr_delay, col='orangered')
 ```
 
 ## Średnie opóźnienia w poszczególnych miesiącach
@@ -30,35 +45,6 @@ plot.default(data2['DepDelayAvg'], xlab = 'Miesiąc', ylab = 'Średnie opóźnie
 
 ## Opóźnienia większe niż 15 min w 2008
 
-```{r, include=FALSE}
-library(ggplot2)
-
-files <- list.files('month_routes')
-col_from_per <- function(p)
-{
-  ifelse(p <= 10, 1, ifelse(p <= 15, 2, ifelse(p <= 20, 3, ifelse(p <= 25, 4, 5))))
-}
-plot_routes_percent <- function(routes)
-{
-  routes$percent <- as.factor(col_from_per(routes$percent))
-  worldmap <- borders("world",xlim = c(-200, -20), ylim = c(20, 55), colour="#efede1", fill="#efede1") # create a layer of borders
-  ggplot() + worldmap +
-    geom_curve(data=routes, aes(x = from.lon, y = from.lat, xend = to.lon, yend = to.lat, colour = percent),  size = 0.2, curvature = .2) + 
-      scale_colour_manual(labels= c('<= 10 %', '10% - 15%', '15% - 20%', '20% - 25%', '>25%'), 
-                         values=c('green', 'purple', 'blue', 'orange', 'red'))+
-    theme(panel.background = element_rect(fill="white"), 
-          axis.line = element_blank(),
-          axis.text.x = element_blank(),
-          axis.text.y = element_blank(),
-          axis.ticks = element_blank(),
-          axis.title.x = element_blank(),
-          axis.title.y = element_blank(),
-          legend.title = element_blank(),
-          legend.position = 'left'
-    ) 
-}
-```
-
 ```{r eruptions}
 inputPanel(
   
@@ -69,20 +55,6 @@ sliderInput('month', 'Month', min=1, max=12,
 renderPlot({plot_routes_percent(read.csv(file.path('month_routes',
                                                                      paste(as.character(input$month), '.csv', sep = ''))))
   })
-```
-
-## Liczba lotów na przestrzeni lat
-```{R, echo=FALSE}
-yearly_data <- loty_w_latach(data)
-plot(yearly_data$rok, yearly_data$liczba_lotow, xlab='Rok', ylab='Liczba Lotów')
-```
-
-
-## Opóznienia na przestrzeni lat
-```{R, echo=FALSE}
-plot(yearly_data$rok, yearly_data$dep_delay, xlab='Rok', ylab='Srednie opoznienie', col='skyblue', type = 'l',
-     ylim=c(min(yearly_data$arr_delay), max(yearly_data$dep_delay)))
-lines(yearly_data$rok, yearly_data$arr_delay, col='orangered')
 ```
 
 ## Który przewoźnik najmniej się spóźnia?
